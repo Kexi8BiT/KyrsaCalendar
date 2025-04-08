@@ -5,39 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kursovaya"
         mc:Ignorable="d"
-        Title="Главный жкран" Height="1080" Width="1920"
-        WindowState ="Maximized">
-   
+        Title="Главный экран" Height="1080" Width="1920"
+        WindowState="Maximized"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <local:DateInCollectionConverter x:Key="DateInCollectionConverter" />
+    </Window.Resources>
+
     <Grid Height="1070" VerticalAlignment="Top" ShowGridLines="False" Background="#333333">
         <Grid.RowDefinitions>
-            <RowDefinition Height="84*"></RowDefinition>
+            <RowDefinition Height="84*"/>
             <RowDefinition Height="65*"/>
-            <RowDefinition Height="230*"></RowDefinition>
+            <RowDefinition Height="230*"/>
             <RowDefinition Height="156*"/>
-
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="190*"></ColumnDefinition>
-            <ColumnDefinition Width="369*"></ColumnDefinition>
-
+            <ColumnDefinition Width="190*"/>
+            <ColumnDefinition Width="369*"/>
             <ColumnDefinition Width="241*"/>
-
         </Grid.ColumnDefinitions>
 
         <Viewbox Margin="302,58,344,156" Grid.ColumnSpan="3" Grid.RowSpan="3" Grid.Row="1">
-            <Calendar x:Name="calendar1" />
-
+            <Calendar x:Name="calendar1">
+                <Calendar.CalendarDayButtonStyle>
+                    <Style TargetType="{x:Type CalendarDayButton}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <DataTrigger Value="True">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource DateInCollectionConverter}">
+                                        <Binding Path="." />
+                                        <Binding Path="DataContext.HighlightedDatesSet" RelativeSource="{RelativeSource AncestorType={x:Type Window}}" />
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="Background" Value="Black" />
+                                <Setter Property="Foreground" Value="White" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Calendar.CalendarDayButtonStyle>
+            </Calendar>
         </Viewbox>
+
         <Rectangle HorizontalAlignment="Left" Fill="White" Height="512" Margin="42,68,0,0" Stroke="Black" VerticalAlignment="Top" Width="509" Grid.Column="2" Grid.RowSpan="2" Grid.Row="1"/>
-
-        <Viewbox Margin="-1531,-750,-647,-1032" Grid.ColumnSpan="3" Grid.RowSpan="4">
-            <DatePicker Name="eventDate" Width="243" Margin="1397,326,323,714" RenderTransformOrigin="0.5,0.5" Height="32" >
-            </DatePicker>
-        </Viewbox>
 
         <TextBlock HorizontalAlignment="Left" Foreground="#28A745" TextWrapping="Wrap" FontSize="120" FontStyle="Italic" Text="Календарь" VerticalAlignment="Center" Grid.Column="1" Height="144" Width="593" RenderTransformOrigin="0.503,0.681" Margin="168,0,0,0"/>
 
-        <Button x:Name ="Spravra" Content="i" FontSize ="50" HorizontalAlignment="Left" Margin="453,10,0,0" VerticalAlignment="Top" Height="107" Width="115" Grid.Column="2" Click="Spravra_Click">
+        <Button x:Name="Spravra" Content="i" FontSize="50" HorizontalAlignment="Left" Margin="453,10,0,0" VerticalAlignment="Top" Height="107" Width="115" Grid.Column="2" Click="Spravra_Click">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Background" Value="#28A745"/>
@@ -52,7 +67,6 @@
                                         BorderBrush="{TemplateBinding BorderBrush}" 
                                         BorderThickness="{TemplateBinding BorderThickness}" 
                                         CornerRadius="70">
-                                    <!-- Указываем радиус скругления -->
                                     <ContentPresenter HorizontalAlignment="Center" 
                                                       VerticalAlignment="Center"/>
                                 </Border>
@@ -63,8 +77,9 @@
             </Button.Style>
         </Button>
 
-        <TextBox Grid.Column="2" FontSize ="25" HorizontalAlignment="Left" Margin="44,7,0,0" Grid.Row="2" TextWrapping="Wrap" x:Name="TexSob" VerticalAlignment="Top" Width="507" Height="443"/>
-        <Button Content="Добавить событие" FontSize ="50" HorizontalAlignment="Left" Margin="44,34,0,0" VerticalAlignment="Top" Height="114" Width="507" Grid.Column="2" Grid.Row="3" Click="Dobawsob_Button">
+        <TextBox Grid.Column="2" FontSize="25" HorizontalAlignment="Left" Margin="44,7,0,0" Grid.Row="2" TextWrapping="Wrap" x:Name="TexSob" VerticalAlignment="Top" Width="507" Height="443"/>
+        <DatePicker Name="eventDate" Width="507" Height="32" HorizontalAlignment="Left" Margin="44,460,0,0" VerticalAlignment="Top" Grid.Column="2" Grid.Row="2" />
+        <Button Content="Добавить событие" FontSize="50" HorizontalAlignment="Left" Margin="44,34,0,0" VerticalAlignment="Top" Height="114" Width="507" Grid.Column="2" Grid.Row="3" Click="Dobawsob_Button">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Background" Value="#28A745"/>
@@ -76,62 +91,11 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border Background="{TemplateBinding Background}" 
-                                    BorderBrush="{TemplateBinding BorderBrush}" 
-                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                    CornerRadius="40">
-                                    <!-- Указываем радиус скругления -->
-                                    <ContentPresenter HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-        </Button>
-        <Button Content="Гороскоп" FontSize ="50" HorizontalAlignment="Left" Margin="51,42,0,0" VerticalAlignment="Top" Height="137" Width="449" Grid.Row="2" Click="Goroskop_Button" Grid.ColumnSpan="2">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Background" Value="#28A745"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="BorderBrush" Value="#28A745"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="Padding" Value="10"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border Background="{TemplateBinding Background}" 
-                                    BorderBrush="{TemplateBinding BorderBrush}" 
-                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                    CornerRadius="40">
-                                    <!-- Указываем радиус скругления -->
-                                    <ContentPresenter HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-        </Button>
-        <Button x:Name ="Prazd" Content="Праздники" FontSize ="50" HorizontalAlignment="Left" Margin="51,209,0,0" VerticalAlignment="Top" Height="137" Width="449" Grid.Row="2" Click="Prazdniki_Button" RenderTransformOrigin="-0.678,-0.635" Grid.ColumnSpan="2">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Background" Value="#28A745"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="BorderBrush" Value="#28A745"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="Padding" Value="10"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}" 
-                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                    CornerRadius="40">
-                                    <!-- Указываем радиус скругления -->
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="40">
                                     <ContentPresenter HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center"/>
+                                                      VerticalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
@@ -139,7 +103,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button x:Name ="Sobit" Content="События" FontSize ="50" HorizontalAlignment="Left" Margin="48,378,0,0" VerticalAlignment="Top" Height="138" Width="448" Grid.Row="2" Click="Sobit_Button" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        <Button Content="Гороскоп" FontSize="50" HorizontalAlignment="Left" Margin="51,42,0,0" VerticalAlignment="Top" Height="137" Width="449" Grid.Row="2" Click="Goroskop_Button" Grid.ColumnSpan="2">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Background" Value="#28A745"/>
@@ -151,12 +115,11 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border Background="{TemplateBinding Background}" 
-                                    BorderBrush="{TemplateBinding BorderBrush}" 
-                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                    CornerRadius="40">
-                                    <!-- Указываем радиус скругления -->
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="40">
                                     <ContentPresenter HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center"/>
+                                                      VerticalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
@@ -164,7 +127,53 @@
                 </Style>
             </Button.Style>
         </Button>
-
-
+        <Button x:Name="Prazd" Content="Праздники" FontSize="50" HorizontalAlignment="Left" Margin="51,209,0,0" VerticalAlignment="Top" Height="137" Width="449" Grid.Row="2" Click="Prazdniki_Button" RenderTransformOrigin="-0.678,-0.635" Grid.ColumnSpan="2">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#28A745"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="#28A745"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="40">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="Sobit" Content="События" FontSize="50" HorizontalAlignment="Left" Margin="48,378,0,0" VerticalAlignment="Top" Height="138" Width="448" Grid.Row="2" Click="Sobit_Button" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#28A745"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="#28A745"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="40">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>
